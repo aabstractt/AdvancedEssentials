@@ -1,0 +1,42 @@
+# MySQL connection
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  dbname: essentials
+  username: root
+  password: "123454321"
+
+# NetAsync Client connection data, this allow verified if the server is game type, support friend and party
+server-data:
+  description: "Lobby"
+  group: "Lobby"
+  password: "123454321"
+  serverId: 1
+  address: 127.0.0.1
+  port: 57007
+  tickInterval: 2
+  isLobbyServer: false
+  isGameServer: true
+  supportParty: true
+  supportFriend: true
+
+# If rank default doesn't exist this allow make a new default rank with this data
+default-rank-data:
+  name: Guest
+  alias: Guest
+  isDefault: true
+  format: "&8&l[Guest]"
+  chat_format: "&8{username}: {message}"
+  nametag_format: "&8{username}"
+  default-dbname: "permissions"
+  default-scoreboard-format: "&c¡Adquierelo!"
+
+rank-factory-settings:
+  # This allow send my permissions to bungeecord my first join (If bungeecore not is enabled)
+  send-permissions-to-netasync: true
+
+social-spy:
+  allow-spect-friend-messages: false
+  allow-spect-party-messages: false
+  allow-spect-game-messages: false
+  allow-spect-team-messages: false
