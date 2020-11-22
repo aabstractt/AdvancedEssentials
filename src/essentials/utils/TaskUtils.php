@@ -50,6 +50,17 @@ class TaskUtils {
 
         Essentials::getInstance()->getScheduler()->cancelTask($taskId);
 
+        self::removeTask($identifier);
+    }
+
+    /**
+     * @param string $identifier
+     */
+    public static function removeTask(string $identifier): void {
+        if (!isset(self::$tasks[$identifier])) {
+            return;
+        }
+
         unset(self::$tasks[$identifier]);
     }
 }

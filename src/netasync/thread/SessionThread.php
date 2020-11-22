@@ -11,7 +11,7 @@ use Threaded;
 class SessionThread extends Threaded {
 
     /** @var BasePacket[] */
-    private array $elements = [];
+    private $elements = [];
 
     /**
      * @param BasePacket $pk

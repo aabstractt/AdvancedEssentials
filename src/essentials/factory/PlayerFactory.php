@@ -5,7 +5,6 @@ namespace essentials\factory;
 use essentials\Essentials;
 use essentials\player\Player;
 use essentials\provider\MysqlProvider;
-use netasync\packet\BasePacket;
 use netasync\packet\ScriptSharePacket;
 use pocketmine\Server;
 
@@ -36,20 +35,24 @@ class PlayerFactory extends Factory {
         $this->addWaitingPacket($player->getName(), ScriptSharePacket::init('essentials:request_information', [
             $player->getName(),
             PlayerFactory::REQUEST_ALL_SERVERS_INFO,
-        ]), fn(Player $player, array $tags) => $player->sendMessage('Servers > ' . count($tags) - 2));
+        ]), function(Player $player, array $tags) {
+            $player->sendMessage('Servers > ' . count($tags));
+        });
     }
 
     /**
      * @param string $name
-     * @param BasePacket $pk
+     * @param ScriptSharePacket $pk
      * @param callable $callback
      */
-    public function addWaitingPacket(string $name, BasePacket $pk, callable $callback): void {
-        $this->waitingPacket[strtolower($name)][$this->ids] = $callback;
+    public function addWaitingPacket(string $name, ScriptSharePacket $pk, callable $callback): void {
+        $id = $this->ids++;
+
+        $this->waitingPacket[strtolower($name)][$id] = $callback;
+
+        $pk->tags[] = $id;
 
         Essentials::getInstance()->sendPacket($pk);
-
-        $this->ids++;
     }
 
     /**
@@ -67,10 +70,20 @@ class PlayerFactory extends Factory {
         if (empty($packets)) return;
 
         /** @var callable|null $callback */
-        $callback = $packets[($tags[1] ?? 0)] ?? null;
+        $callback = $packets[$tags[count($tags) - 1]] ?? null;
 
         if ($callback === null) return;
 
-        $callback($player, $tags);
+        unset($tags[0], $tags[1], $tags[count($tags) - 1]);
+
+        $newTags = [];
+
+        foreach ($tags as $tag) {
+            $newTags[] = $tag;
+        }
+
+        unset($tags);
+
+        $callback($player, $newTags);
     }
 }

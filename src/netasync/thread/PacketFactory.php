@@ -15,7 +15,7 @@ use netasync\packet\SendGameStatusPacket;
 class PacketFactory {
 
     /** @var BasePacket[] */
-    private array $packets = [];
+    private $packets = [];
 
     /**
      * PacketFactory constructor.

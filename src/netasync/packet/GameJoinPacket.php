@@ -4,22 +4,18 @@ declare(strict_types=1);
 
 namespace netasync\packet;
 
-use essentials\player\Player;
 use netasync\NetworkBinaryStream;
-use pocketmine\Server;
 
 class GameJoinPacket extends BasePacket {
 
     /** @var string */
-    public string $from;
+    public $from;
     /** @var string */
-    public string $to;
-    /** @var Player|null */
-    public ?Player $player;
+    public $to;
     /** @var string */
-    public string $username;
+    public $username;
     /** @var int */
-    public int $gameId;
+    public $gameId;
 
     /**
      * GameJoinPacket constructor.
@@ -38,8 +34,6 @@ class GameJoinPacket extends BasePacket {
 
         $this->username = $stream->readString();
 
-        $this->player = Server::getInstance()->getPlayerExact($this->username);
-
         $this->gameId = $stream->readInt();
     }
 
@@ -53,10 +47,31 @@ class GameJoinPacket extends BasePacket {
 
         $stream->writeString($this->to);
 
-        $stream->writeString($this->player->getName());
+        $stream->writeString($this->username);
 
         $stream->writeInt($this->gameId);
 
         return $stream;
+    }
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @param string $username
+     * @param int $gameId
+     * @return GameJoinPacket
+     */
+    public static function init(string $from, string $to, string $username, int $gameId): GameJoinPacket {
+        $pk = new self();
+
+        $pk->from = $from;
+
+        $pk->to = $to;
+
+        $pk->username = $username;
+
+        $pk->gameId = $gameId;
+
+        return $pk;
     }
 }

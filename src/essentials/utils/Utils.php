@@ -14,9 +14,9 @@ use pocketmine\utils\TextFormat;
 class Utils {
 
     /** @var string[] */
-    private static array $objectives = [];
+    private static $objectives = [];
     /** @var PermissionAttachment[] */
-    private static array $attachments = [];
+    private static $attachments = [];
 
     /**
      * @param Player|Player[] $players

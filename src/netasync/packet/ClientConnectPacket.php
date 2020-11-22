@@ -28,9 +28,9 @@ class ClientConnectPacket extends BasePacket {
     public const SERVER_SHUTDOWN = 'Server was shutdown';
 
     /** @var int|null */
-    public ?int $type;
+    public $type;
     /** @var string|null */
-    public ?string $reason = "Unknown";
+    public $reason = "Unknown";
 
     /**
      * ClientConnectPacket constructor.

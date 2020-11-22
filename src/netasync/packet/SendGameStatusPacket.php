@@ -9,23 +9,23 @@ use netasync\NetworkBinaryStream;
 class SendGameStatusPacket extends BasePacket {
 
     /** @var string|null */
-    public ?string $data;
+    public $data;
     /** @var string|null */
-    public ?string $from;
+    public $from;
     /** @var string|null */
-    public ?string $to;
+    public $to;
     /** @var string|null */
-    public ?string $customName;
+    public $customName;
     /** @var int */
-    public int $gameId;
+    public $gameId;
     /** @var int */
-    public int $playersCount;
+    public $playersCount;
     /** @var int */
-    public int $maxSlots;
+    public $maxSlots;
     /** @var int */
-    public int $gameStatus;
+    public $gameStatus;
     /** @var bool */
-    public bool $isTeam = false;
+    public $isTeam = false;
 
     /**
      * SendGameStatusPacket constructor.
@@ -82,5 +82,29 @@ class SendGameStatusPacket extends BasePacket {
         $stream->writeBool($this->isTeam);
 
         return $stream;
+    }
+
+    public static function init(string $data, string $from, string $to, string $customName, int $gameId, int $playersCount, int $maxSlots, int $gameStatus, bool $isTeam = false): SendGameStatusPacket {
+        $pk = new self;
+
+        $pk->data = $data;
+
+        $pk->from = $from;
+
+        $pk->to = $to;
+
+        $pk->customName = $customName;
+
+        $pk->gameId = $gameId;
+
+        $pk->playersCount = $playersCount;
+
+        $pk->maxSlots = $maxSlots;
+
+        $pk->gameStatus = $gameStatus;
+
+        $pk->isTeam = $isTeam;
+
+        return $pk;
     }
 }

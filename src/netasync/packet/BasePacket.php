@@ -22,9 +22,9 @@ abstract class BasePacket {
     public const SCRIPT_SHARE_PACKET = 0x08;
 
     /** @var string */
-    private string $packetName;
+    private $packetName;
     /** @var int */
-    private int $pid;
+    private $pid;
 
     /**
      * BasePacket constructor.

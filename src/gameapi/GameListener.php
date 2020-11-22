@@ -6,6 +6,7 @@ use essentials\Essentials;
 use essentials\event\netasync\CustomPacketReceiveEvent;
 use essentials\player\Player;
 use netasync\packet\GameJoinPacket;
+use netasync\packet\PlayerSendPacket;
 use netasync\packet\RequestGameStatusPacket;
 use netasync\packet\SendGameStatusPacket;
 use pocketmine\event\block\SignChangeEvent;
@@ -16,7 +17,6 @@ use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\math\Vector3;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use gameapi\arena\Arena;
@@ -120,7 +120,7 @@ class GameListener implements Listener {
     }
 
     /** @var string[] */
-    private array $playersQueued = [];
+    private $playersQueued = [];
 
     public function onPacketReceived(CustomPacketReceiveEvent $ev) {
         $pk = $ev->getPacket();
@@ -136,14 +136,17 @@ class GameListener implements Listener {
 
             self::sendGameStatus($arena, $pk->from, $pk->data);
 
-            $arena->signVector = new Vector3((int)$x, (int)$y, (int)$z);
+            $arena->signData = $pk->data;
         } else if ($pk instanceof GameJoinPacket) {
-            $player = $pk->player;
+            /** @var Player $player */
+            $player = Server::getInstance()->getPlayerExact($pk->username);
 
             $gameId = $pk->gameId;
 
             if ($player == null) {
                 $this->playersQueued[strtolower($pk->username)] = $gameId === -2 ? Game::getArenaFactory()->getRandomArena()->getId() : $gameId;
+
+                Essentials::getInstance()->sendPacket(PlayerSendPacket::init($pk->username, $pk->from, $pk->to));
             } else {
                 $this->processQueue($player, $gameId);
             }
@@ -156,25 +159,15 @@ class GameListener implements Listener {
      * @param string $data
      */
     public static final function sendGameStatus(Arena $arena, string $to, string $data): void {
-        $packet = new SendGameStatusPacket();
-
-        $packet->data = $data;
-
-        $packet->from = Essentials::getServerDescription();
-
-        $packet->to = $to;
-
-        $packet->customName = $arena->getLevel()->getCustomName();
-
-        $packet->gameId = $arena->getId();
-
-        $packet->playersCount = count($arena->getPlayers());
-
-        $packet->maxSlots = $arena->getLevel()->getMaxSlots();
-
-        $packet->gameStatus = $arena->getStatus();
-
-        Essentials::getInstance()->sendPacket($packet);
+        Essentials::getInstance()->sendPacket(SendGameStatusPacket::init($data,
+            Essentials::getServerDescription(),
+            $to,
+            $arena->getLevel()->getCustomName(),
+            $arena->getId(),
+            count($arena->getPlayers()),
+            $arena->getLevel()->getMaxSlots(),
+            $arena->getStatus()
+        ));
     }
 
     /**

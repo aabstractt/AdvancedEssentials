@@ -13,7 +13,7 @@ use gameapi\Utils;
 class Level {
 
     /** @var array */
-    public static array $defaultData = [
+    public static $defaultData = [
         'folderName' => '',
         'customName' => '',
         'maxSlots' => 2,
@@ -22,9 +22,9 @@ class Level {
     ];
 
     /** @var array */
-    public array $data;
+    public $data;
     /** @var Arena */
-    public Arena $arena;
+    public $arena = null;
 
     /**
      * Level constructor.

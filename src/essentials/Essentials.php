@@ -79,7 +79,7 @@ class Essentials extends PluginBase {
         self::$playerFactory = new PlayerFactory(new MysqlProvider([]));
         self::$socialFactory = new SocialFactory(new MysqlProvider([]), $this->getConfig()->getNested('default-rank-data.default-dbname'));
 
-        $this->session = new NetAsyncSession($this->getServer()->getLogger(), self::getServerAddress(), 57007, $this->getConfig()->get('server-data'), $this->getScheduler());
+        $this->session = new NetAsyncSession($this->getServer()->getLogger(), self::getServerAddress(), 57007, $this->getConfig()->get('server-data'));
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 
@@ -163,7 +163,7 @@ class Essentials extends PluginBase {
      * @return bool
      */
     public final static function isDefaultServer(): bool {
-        return self::getServerGroup() === 'Lobby';
+        return self::isLobbyServer() && self::getServerGroup() === 'Lobby';
     }
 
     /**

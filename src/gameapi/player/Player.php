@@ -15,19 +15,19 @@ use gameapi\GameMath;
 class Player {
 
     /** @var string */
-    protected string $name;
+    protected $name;
     /** @var Arena */
-    protected Arena $arena;
+    protected $arena;
     /** @var int */
-    private int $slot = 0;
+    private $slot = 0;
     /** @var Player */
-    private Player $lastKiller;
+    private $lastKiller;
     /** @var int */
-    private int $lastKillerTime = -1;
+    private $lastKillerTime = -1;
     /** @var Player */
-    private Player $lastAssistance;
+    private $lastAssistance;
     /** @var int */
-    private int $lastAssistanceTime = -1;
+    private $lastAssistanceTime = -1;
 
     /**
      * Player constructor.
@@ -62,7 +62,7 @@ class Player {
     }
 
     /**
-     * @return \skywars\player\Player|null
+     * @return Player|null
      */
     public function getLastKiller(): ?Player {
         if ($this->lastKiller === null || $this->lastKillerTime < 0) {

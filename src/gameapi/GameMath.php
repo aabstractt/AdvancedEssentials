@@ -17,11 +17,11 @@ class GameMath {
     /** @var float|int */
     private $z;
     /** @var float */
-    private float $yaw;
+    private $yaw;
     /** @var float */
-    private float $pitch;
+    private $pitch;
     /** @var Level|null */
-    private ?Level $level;
+    private $level;
 
     /**
      * @param float|int $x

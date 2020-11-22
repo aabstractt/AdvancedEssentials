@@ -64,7 +64,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return;
 
         try {
             if (mysqli_connect_errno()) {
@@ -95,7 +95,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return;
 
         try {
             if(!mysqli_query($connection, "DELETE FROM ranks WHERE name = '{$rank->getName()}'")) {
@@ -121,7 +121,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return null;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return null;
 
         try {
             if (!($query = mysqli_query($connection, "SELECT * FROM ranks WHERE name = '{$name}' OR alias = '{$name}'"))) {
@@ -152,7 +152,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return [];
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return [];
 
         try {
             if(!($query = mysqli_query($connection, "SELECT * FROM ranks"))) {
@@ -183,7 +183,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return null;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return null;
 
         try {
             if(!($query = mysqli_query($connection, "SELECT * FROM ranks WHERE isDefault = 1"))) {
@@ -217,7 +217,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return [];
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return [];
 
         try {
             $players = [];
@@ -251,7 +251,7 @@ class RankFactory extends Factory {
 
         if ($rank === null) return;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return;
 
         try {
             if($this->getPlayerRank($name) == null) {
@@ -279,7 +279,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return null;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return null;
 
         try {
             if(!($query = mysqli_query($connection, "SELECT * FROM users_rank WHERE username = '{$name}'"))) {
@@ -309,7 +309,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return;
 
         try {
             if ($this->getPlayerPrefix($name) === '') {
@@ -339,7 +339,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return null;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return null;
 
         try {
             if(!($query = mysqli_query($connection, "SELECT * FROM users_prefix WHERE username = '{$name}'"))) {
@@ -367,7 +367,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return;
 
         try {
             if(!mysqli_query($connection, "INSERT INTO users_permission(username, permission) VALUES ('{$name}', '{$permission}')")) {
@@ -389,7 +389,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return [];
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return [];
 
         try {
             $permissions = [];
@@ -423,7 +423,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return;
 
         try {
             if(!mysqli_query($connection, "DELETE FROM users_permission WHERE username = '{$name}' AND permission = '{$permission}'")) {
@@ -446,7 +446,7 @@ class RankFactory extends Factory {
 
         if ($connection === null) return false;
 
-        $this->getProvider()->setDb($this->dbname);
+        if (!$connection->select_db($this->dbname)) return false;
 
         try {
             if(!($query = mysqli_query($connection, "SELECT * FROM users_permission WHERE username = '{$name}' AND permission = '{$permission}'"))) {

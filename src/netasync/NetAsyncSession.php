@@ -8,6 +8,7 @@ use essentials\Essentials;
 use essentials\event\netasync\CustomPacketReceiveEvent;
 use essentials\utils\TaskUtils;
 use netasync\packet\ClientConnectPacket;
+use netasync\packet\ScriptSharePacket;
 use netasync\thread\ClientThread;
 use pocketmine\event\Listener;
 use pocketmine\scheduler\TaskScheduler;
@@ -25,13 +26,13 @@ class NetAsyncSession implements Listener {
      * @param string $address
      * @param int $port
      * @param array $serverData
-     * @param TaskScheduler $scheduler
      */
     public function __construct(ThreadedLogger $logger, string $address, int $port, array $serverData) {
         $this->clientThread = new ClientThread($logger, $address, $port, $serverData);
 
-        Server::getInstance()->getPluginManager()->registerEvents(new NetAsyncSessionListener(), Essentials::getInstance());
+        Server::getInstance()->getPluginManager()->registerEvents($this, Essentials::getInstance());
 
+        TaskUtils::scheduleRepeatingTask(new ReconnectUpdateScheduler($this), 60);
         TaskUtils::scheduleRepeatingTask(new SessionHandler($this), 1);
     }
 
@@ -45,11 +46,19 @@ class NetAsyncSession implements Listener {
     /**
      * @param CustomPacketReceiveEvent $ev
      */
-    public function onCustomPacketReceiveEvent(CustomPacketReceiveEvent $ev): void {
+    public function onPacketReceive(CustomPacketReceiveEvent $ev): void {
         $pk = $ev->getPacket();
 
         if ($pk instanceof ClientConnectPacket) {
-            Server::getInstance()->getLogger()->info($pk->reason);
+            if ($pk->type == ClientConnectPacket::CONNECTION_ACCEPTED) {
+                Server::getInstance()->getLogger()->info('Server is now connected to NetAsync');
+            } else if ($pk->type == ClientConnectPacket::CONNECTION_RESEND) {
+                $this->clientThread->setStatus(ClientThread::STATUS_RECONNECTING);
+            }
+        } else if ($pk instanceof ScriptSharePacket) {
+            Essentials::getPlayerFactory()->handleSharePacket($pk);
+
+            Essentials::getSocialFactory()->handleSharePacket($pk);
         }
     }
 }

@@ -24,16 +24,16 @@ use gameapi\player\Player;
 class Utils {
 
     /** @var string[] */
-    private static array $objectives = [];
+    private static $objectives = [];
 
     /** @var Configurator[] */
-    private static array $configurators = [];
+    private static $configurators = [];
 
     /** @var int[] */
-    private static array $signQueue = [];
+    private static $signQueue = [];
 
     /** @var array */
-    private static array $dataSign = [];
+    private static $dataSign = [];
 
     /**
      * @param string $name
@@ -225,7 +225,7 @@ class Utils {
                 self::$signQueue[$key] = time();
             } else if (time() - self::$signQueue[$key] > 10) {
                 if (($arena = Game::getArenaFactory()->createArena()) !== null) {
-                    $arena->signVector = new Position($x, $y, $z, Server::getInstance()->getDefaultLevel());
+                    $arena->signData = $x . ':' . $y . ':' . $z;
 
                     unset(self::$signQueue[$key]);
 

@@ -4,16 +4,9 @@ declare(strict_types=1);
 
 namespace gameapi;
 
-use pocketmine\scheduler\Task;
+use essentials\task\EssentialsTask;
 
-class GameUpdate extends Task {
-
-    /**
-     * GameUpdate constructor.
-     */
-    public function __construct() {
-        $this->setHandler(Game::getInstance()->getScheduler()->scheduleRepeatingTask($this, 20));
-    }
+class GameUpdate extends EssentialsTask {
 
     /**
      * Actions to execute when run
@@ -24,5 +17,12 @@ class GameUpdate extends Task {
         foreach (Game::getArenaFactory()->getAllArenas() as $arena) {
             $arena->tick();
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier(): string {
+        return 'game_update_scheduler';
     }
 }

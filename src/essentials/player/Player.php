@@ -14,8 +14,12 @@ class Player extends pocketPlayer {
     /**
      * Disconnect from this server and allow send to a lobby or another server
      */
-    public function disconnect(): void {
-        $this->sendTo(ClientThread::SEND_TO_LOBBY);
+    public function disconnectNow(): void {
+        // TODO: Send ScriptSharePacket with "send:lobby"
+    }
+
+    public function connectNowFallback(): void {
+        // TODO: Send ScriptSharePacket with "send:fallback"
     }
 
     /**
@@ -26,14 +30,6 @@ class Player extends pocketPlayer {
      * @param string $to
      */
     public function sendTo(string $to): void {
-        if (strpos('send:', $to) === false) $to = 'send:' . $to;
-
-        $pk = new PlayerSendPacket();
-
-        $pk->player = $this;
-
-        $pk->from = Essentials::getServerDescription();
-
-        $pk->data = $to;
+        Essentials::getInstance()->sendPacket(PlayerSendPacket::init($this->getName(), Essentials::getServerDescription(), $to));
     }
 }

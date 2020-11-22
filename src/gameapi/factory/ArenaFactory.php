@@ -16,9 +16,9 @@ use pocketmine\utils\TextFormat;
 abstract class ArenaFactory {
 
     /** @var Arena[] */
-    protected array $arenas = [];
+    protected $arenas = [];
     /** @var int */
-    protected int $gamesPlayed = 0;
+    protected $gamesPlayed = 0;
 
     /**
      * @param Level|null $level
@@ -28,7 +28,7 @@ abstract class ArenaFactory {
 
 
     /**
-     * @return \skywars\arena\Arena[]
+     * @return Arena[]
      */
     public function getAllArenas(): array {
         return $this->arenas;
@@ -101,9 +101,11 @@ abstract class ArenaFactory {
      */
     public function getArenaBySign(int $x, int $y, int $z): ?Arena {
         foreach ($this->arenas as $arena) {
-            if (($pos = $arena->signVector) !== null && (($pos->getFloorX() === $x) && ($pos->getFloorY() === $y) && ($z === $pos->getFloorZ()))) {
-                return $arena;
-            }
+            $data = $x . ':' . $y . ':' . $z;
+
+            if ($arena->signData !== $data) continue;
+
+            return $arena;
         }
 
         return null;

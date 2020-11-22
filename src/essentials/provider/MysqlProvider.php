@@ -24,12 +24,18 @@ class MysqlProvider extends Provider {
     /**
      * @return mysqli
      */
-    public function initConnection(): mysqli {
-        if (!$this->hasConnection()) {
-            $this->mysql = mysqli_connect($this->data['host'], $this->data['username'], $this->data['password']);
+    public function initConnection(): ?mysqli {
+        if ($this->mysql === null) {
+            $this->mysql = @new mysqli($this->data['host'], $this->data['username'], $this->data['password']);
         }
 
-        return $this->mysql;
+        if (!$this->hasConnection()) {
+            $this->mysql->connect($this->data['host'], $this->data['username'], $this->data['password']);
+
+            if ($this->mysql->connect_error) return null;
+        }
+
+        return $this->mysql->ping() ? $this->mysql : null;
     }
 
     /**
@@ -39,55 +45,7 @@ class MysqlProvider extends Provider {
         return $this->mysql;
     }
 
-    public function init(): void {
-        $this->setDb($this->data['dbname']);
-    }
-
-    /**
-     * @param string|null $dbname
-     */
-    public function setDb(?string $dbname = null): void {
-        if ($dbname === null) $dbname = $this->data['dbname'];
-
-        mysqli_select_db($this->initConnection(), $dbname);
-    }
-
-    /**
-     * This allow create a table but without repeating code
-     *
-     * @param string $tableName
-     * @param array $data
-     * @param string|null $dbname
-     */
-    public function createTable(string $tableName, array $data, string $dbname = null): void {
-        if ($dbname === null) $dbname = $this->data['dbname'];
-
-        $this->setDb($dbname);
-
-        $query = 'CREATE TABLE IF NOT EXISTS ' . $tableName . '(';
-
-        $anotherQuery = ') VALUES (';
-
-        $i = 0;
-
-        foreach ($data as $key => $value) {
-            if ($i > 0) {
-                $query .= ', ';
-
-                $anotherQuery .= ', ';
-            }
-
-            $query .= $key;
-
-            $anotherQuery .= $value;
-
-            $i++;
-        }
-
-        echo 'Query > ' . $query . $anotherQuery . PHP_EOL;
-    }
-
     public function hasConnection(): bool {
-        return $this->mysql != null;
+        return $this->mysql != null && $this->mysql->ping();
     }
 }

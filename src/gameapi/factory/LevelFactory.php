@@ -8,12 +8,12 @@ use DirectoryIterator;
 use gameapi\arena\Level;
 use gameapi\Game;
 use pocketmine\Server;
-use skywars\utils\Utils;
+use gameapi\Utils;
 
 class LevelFactory {
 
     /** @var Level[] */
-    private array $levels = [];
+    private $levels = [];
 
     /**
      * LevelManager constructor.

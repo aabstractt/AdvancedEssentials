@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace gameapi;
 
+use essentials\utils\TaskUtils;
 use gameapi\factory\ArenaFactory;
 use gameapi\factory\LevelFactory;
 use pocketmine\plugin\PluginBase;
@@ -11,11 +12,11 @@ use pocketmine\plugin\PluginBase;
 abstract class Game extends PluginBase {
 
     /** @var Game */
-    private static Game $instance;
+    private static $instance;
     /** @var ArenaFactory */
-    protected static ArenaFactory $arenaFactory;
+    protected static $arenaFactory;
     /** @var LevelFactory */
-    private static LevelFactory $levelFactory;
+    private static $levelFactory;
 
     /**
      * @return Game
@@ -63,7 +64,7 @@ abstract class Game extends PluginBase {
 
         $this->registerClasses();
 
-        new GameUpdate();
+        TaskUtils::scheduleRepeatingTask(new GameUpdate());
     }
 
     /**

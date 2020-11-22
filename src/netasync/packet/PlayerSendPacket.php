@@ -10,12 +10,12 @@ use pocketmine\Server;
 
 class PlayerSendPacket extends BasePacket {
 
-    /** @var Player|null */
-    public ?Player $player;
     /** @var string */
-    public string $from;
+    public $username;
     /** @var string */
-    public string $data;
+    public $from;
+    /** @var string */
+    public $to;
 
     /**
      * PlayerSendPacket constructor.
@@ -28,11 +28,11 @@ class PlayerSendPacket extends BasePacket {
      * @param NetworkBinaryStream $stream
      */
     public function decode(NetworkBinaryStream $stream): void {
-        $this->player = Server::getInstance()->getPlayerExact($stream->readString());
+        $this->username = $stream->readString();
 
         $this->from = $stream->readString();
 
-        $this->data = $stream->readString();
+        $this->to = $stream->readString();
     }
 
     /**
@@ -41,12 +41,28 @@ class PlayerSendPacket extends BasePacket {
     public function encode(): NetworkBinaryStream {
         $stream = parent::encode();
 
-        $stream->writeString($this->player->getName());
+        $stream->writeString($this->username);
 
         $stream->writeString($this->from);
 
-        $stream->writeString($this->data);
+        $stream->writeString($this->to);
 
         return $stream;
+    }
+
+    /**
+     * @param string $username
+     * @param string $from
+     * @param string $to
+     * @return PlayerSendPacket
+     */
+    public static function init(string $username, string $from, string $to): PlayerSendPacket {
+        $pk = new self();
+
+        $pk->username = $username;
+
+        $pk->from = $from;
+
+        $pk->to = $to;
     }
 }

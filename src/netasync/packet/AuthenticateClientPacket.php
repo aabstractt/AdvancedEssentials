@@ -9,13 +9,13 @@ use netasync\NetworkBinaryStream;
 class AuthenticateClientPacket extends BasePacket {
 
     /** @var string */
-    public string $description;
+    public $description;
     /** @var string */
-    public string $group;
+    public $group;
     /** @var string */
-    public string $password;
+    public $password;
     /** @var bool */
-    public bool $isLobbyServer = false;
+    public $isLobbyServer = false;
 
     /**
      * @param NetworkBinaryStream $stream
@@ -52,5 +52,26 @@ class AuthenticateClientPacket extends BasePacket {
      */
     public function __construct() {
         parent::__construct('AUTHENTICATE_CLIENT_PACKET', self::AUTHENTICATE_CLIENT_PACKET);
+    }
+
+    /**
+     * @param string $description
+     * @param string $group
+     * @param string $password
+     * @param bool $isLobbyServer
+     * @return AuthenticateClientPacket
+     */
+    public static function init(string $description, string $group, string $password, bool $isLobbyServer): AuthenticateClientPacket {
+        $pk = new self;
+
+        $pk->description = $description;
+
+        $pk->group = $group;
+
+        $pk->password = $password;
+
+        $pk->isLobbyServer = $isLobbyServer;
+
+        return $pk;
     }
 }

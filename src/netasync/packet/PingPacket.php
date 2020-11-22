@@ -9,7 +9,7 @@ use netasync\NetworkBinaryStream;
 class PingPacket extends BasePacket {
 
     /** @var string|null */
-    public ?string $from;
+    public $from;
 
     /**
      * PingPacket constructor.

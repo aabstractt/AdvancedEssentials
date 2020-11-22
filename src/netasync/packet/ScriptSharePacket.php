@@ -9,9 +9,9 @@ use netasync\NetworkBinaryStream;
 class ScriptSharePacket extends BasePacket {
 
     /** @var string */
-    public string $data;
+    public $data;
     /** @var array */
-    public array $tags = [];
+    public $tags = [];
 
     /**
      * ScriptSharePacket constructor.

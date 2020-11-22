@@ -6,7 +6,6 @@ namespace gameapi\arena;
 
 use gameapi\Game;
 use gameapi\player\Player;
-use pocketmine\math\Vector3;
 use pocketmine\utils\TextFormat;
 
 abstract class Arena {
@@ -19,29 +18,27 @@ abstract class Arena {
         STATUS_RESTARTING = 4;
 
     /** @var int */
-    private int $id;
+    private $id;
     /** @var Level */
-    protected Level $level;
+    protected $level;
     /** @var string */
-    protected string $worldName;
+    protected $worldName;
     /** @var bool */
-    protected bool $privateGame;
+    protected $privateGame;
     /** @var int */
-    protected int $status = Arena::STATUS_WAITING;
+    protected $status = Arena::STATUS_WAITING;
     /** @var int */
-    protected int $lobbytime = 0;
+    protected $startTime = 0;
     /** @var int */
-    protected int $gametime = 0;
+    protected $gametime = 0;
     /** @var int */
-    protected int $endtime = 0;
-    /** @var Vector3|null */
-    public ?Vector3 $signVector = null;
+    protected $endtime = 0;
+    /** @var string|null */
+    public $signData = null;
     /** @var Player[] */
-    protected array $players = [];
+    protected $players = [];
     /** @var Player[] */
-    protected array $spectators = [];
-    /** @var int */
-    protected int $startTime = 0;
+    protected $spectators = [];
 
     /**
      * Arena constructor.
@@ -64,7 +61,7 @@ abstract class Arena {
             $this->worldName = 'Match-' . $id;
         }
 
-        $this->lobbytime = Game::getInitialStartTime();
+        $this->startTime = Game::getInitialStartTime();
         $this->gametime = Game::getInitialGameTime();
         $this->endtime = Game::getInitialEndtime();
 
@@ -302,10 +299,10 @@ abstract class Arena {
                 $this->startTime--;
 
                 if (in_array($this->startTime, [60, 50, 40, 30, 20, 10]) || ($this->startTime > 0 && $this->startTime <= 5)) {
-                    $this->broadcastMessage(TextFormat::colorize('&eLa partida comenzara en &6' . $this->lobbytime . '&e segundos.'));
+                    $this->broadcastMessage(TextFormat::colorize('&eLa partida comenzara en &6' . $this->startTime . '&e segundos.'));
                 }
 
-                if ($this->lobbytime <= 0) {
+                if ($this->startTime <= 0) {
                     $this->startGame();
 
                     $this->sendScoreboard();

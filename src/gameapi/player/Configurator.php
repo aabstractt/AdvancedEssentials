@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace gameapi\player;
 
 use gameapi\Game;
-use gameapi\utils\Utils;
+use gameapi\Utils;
 use pocketmine\level\Location;
 use pocketmine\Server;
 use gameapi\arena\Level;
@@ -13,10 +13,10 @@ use gameapi\arena\Level;
 class Configurator {
 
     /** @var string */
-    private string $name;
+    private $name;
 
     /** @var array */
-    private array $data;
+    private $data;
 
     /**
      * Configurator constructor.
